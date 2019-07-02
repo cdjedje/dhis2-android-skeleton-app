@@ -15,7 +15,7 @@ public class Sdk {
     public static D2Configuration getD2Configuration(Context context) {
 
         return D2Configuration.builder()
-                .appName("skeleton_App")
+                .appName("cdjedje")
                 .appVersion("0.0.1")
                 .readTimeoutInSeconds(30)
                 .connectTimeoutInSeconds(30)
