@@ -230,6 +230,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             wipeData();
         } else if (id == R.id.navExit) {
             compositeDisposable.add(logOut(this));
+        }else if (id==R.id.navPrograms){
+            ActivityStarter.startActivity(this, ProgramsActivity.class, false);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawerLayout);

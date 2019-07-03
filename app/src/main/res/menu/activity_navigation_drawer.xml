@@ -5,7 +5,9 @@
 
     <group android:checkableBehavior="single">
         <!--TODO Add navigation to program list-->
-
+        <item
+            android:id="@+id/navPrograms"
+            android:title="@string/title_activity_programs"/>
     </group>
 
     <item android:title="@string/data_management">
