@@ -12,6 +12,7 @@ import com.example.android.androidskeletonapp.ui.base.ListActivity;
 import com.example.android.androidskeletonapp.ui.enrollment_form.EnrollmentFormActivity;
 
 import org.hisp.dhis.android.core.maintenance.D2Error;
+import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
 import org.hisp.dhis.android.core.program.Program;
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityInstanceCollectionRepository;
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityInstanceCreateProjection;
@@ -56,6 +57,18 @@ public class TrackedEntityInstancesActivity extends ListActivity {
             String teiUid = null;
 
             //TODO Create a new TEI and open the EnrollmentFormActivity if success
+            OrganisationUnit organisationUnit = Sdk.d2().organisationUnitModule().organisationUnits.byOrganisationUnitScope(OrganisationUnit.Scope.SCOPE_DATA_CAPTURE).one().get();
+            Program program = Sdk.d2().programModule().programs.uid(selectedProgram).get();
+            try {
+                Sdk.d2().trackedEntityModule().trackedEntityInstances.add(
+                        TrackedEntityInstanceCreateProjection.builder()
+                                .organisationUnit(organisationUnit.uid())
+                                .trackedEntityType(program.trackedEntityType().uid())
+                                .build()
+                );
+            } catch (D2Error d2Error) {
+                d2Error.printStackTrace();
+            }
         });
     }
 
