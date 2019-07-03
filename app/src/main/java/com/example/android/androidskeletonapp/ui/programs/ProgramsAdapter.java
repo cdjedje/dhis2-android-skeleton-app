@@ -38,7 +38,7 @@ public class ProgramsAdapter extends PagedListAdapter<Program, ListItemWithStyle
         Program program = getItem(position);
         holder.title.setText(program.shortName());
         holder.subtitle1.setText(program.programStages().size()+" Program Stages");
-        
+
         StyleBinderHelper.bindStyle(holder,program.style());
     }
 }
