@@ -49,8 +49,12 @@ public class LoginViewModel extends ViewModel {
 
     public Single<User> setServerUrlAndLogin(String username, String password, String serverUrl) {
         // TODO Set server url and login
-        Completable completable = D2Manager.setServerUrl(serverUrl);
-        return completable.andThen(Sdk.d2().userModule().logIn(username,password)).subscribeOn(Schedulers.io());
+//        Completable completable = D2Manager.setServerUrl(serverUrl);
+//        return completable.andThen(Sdk.d2().userModule().logIn(username,password)).subscribeOn(Schedulers.io());
+        return D2Manager.setServerUrl(serverUrl)
+                .andThen(D2Manager.instantiateD2())
+                .flatMap(d2 -> Sdk.d2().userModule().logIn(username, password))
+                .subscribeOn(Schedulers.io());
     }
 
     void loginDataChanged(String serverUrl, String username, String password) {
