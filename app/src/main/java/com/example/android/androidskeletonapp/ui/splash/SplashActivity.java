@@ -48,6 +48,6 @@ public class SplashActivity extends AppCompatActivity {
         Single<D2> d2Single = D2Manager.setUp(Sdk.getD2Configuration(this))
                 .andThen(D2Manager.setServerUrl("http://android2.dhis2.org:8080"))
                 .andThen(D2Manager.instantiateD2());
-        return Single.never();
+        return d2Single;
     }
 }
