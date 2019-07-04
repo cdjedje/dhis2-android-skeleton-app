@@ -1,5 +1,7 @@
 package com.example.android.androidskeletonapp.ui.tracked_entity_instances;
 
+import android.animation.StateListAnimator;
+import android.graphics.drawable.Icon;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import com.example.android.androidskeletonapp.data.service.DateFormatHelper;
 import com.example.android.androidskeletonapp.ui.base.DiffByIdItemCallback;
 import com.example.android.androidskeletonapp.ui.base.ListItemWithSyncHolder;
 
+import org.hisp.dhis.android.core.common.State;
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityAttributeValue;
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityInstance;
 
@@ -18,11 +21,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.paging.PagedListAdapter;
 
+import io.reactivex.internal.operators.flowable.FlowableGroupBy;
+
 import static com.example.android.androidskeletonapp.data.service.AttributeHelper.attributePatientIdUid;
 import static com.example.android.androidskeletonapp.data.service.AttributeHelper.attributePatientNameUid;
 import static com.example.android.androidskeletonapp.data.service.AttributeHelper.attributeResidentInCatchmentAreaUid;
 import static com.example.android.androidskeletonapp.data.service.AttributeHelper.attributeYearOfBirthUid;
 import static com.example.android.androidskeletonapp.data.service.StyleBinderHelper.setBackgroundColor;
+import static com.example.android.androidskeletonapp.data.service.StyleBinderHelper.setState;
 
 public class TrackedEntityInstanceAdapter extends PagedListAdapter<TrackedEntityInstance, ListItemWithSyncHolder> {
 
@@ -50,7 +56,9 @@ public class TrackedEntityInstanceAdapter extends PagedListAdapter<TrackedEntity
         setBackgroundColor(R.color.colorAccentDark, holder.icon);
 
         // TODO show the correct syncIcon for each tracked entity instance state
+
         // TODO - setState(trackedEntityInstance.state(), holder.syncIcon);
+        setState(trackedEntityInstance.state(), holder.syncIcon);
     }
 
     private String valueAt(List<TrackedEntityAttributeValue> values, String attributeUid) {
