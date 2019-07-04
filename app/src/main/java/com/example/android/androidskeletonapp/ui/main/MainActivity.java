@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FloatingActionButton syncMetadataButton;
     private FloatingActionButton syncDataButton;
     // TODO - private FloatingActionButton uploadDataButton;
+    private FloatingActionButton uploadDataButton;
 
     private TextView syncStatusText;
     private ProgressBar progressBar;
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         syncMetadataButton = findViewById(R.id.syncMetadataButton);
         syncDataButton = findViewById(R.id.syncDataButton);
         // TODO bind uploadDataButton to "uploadDataButton" view
+        uploadDataButton = findViewById(R.id.uploadDataButton);
 
         syncStatusText = findViewById(R.id.notificator);
         progressBar = findViewById(R.id.syncProgressBar);
@@ -114,13 +117,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         // TODO Listen to uploadDataButton and execute these actions:
+        uploadDataButton.setOnClickListener(view -> {
+            setSyncing();
+            Snackbar.make(view, "Uploaded data", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            syncStatusText.setText(R.string.upload_data);
+            Observable.fromCallable(Sdk.d2().trackedEntityModule().trackedEntityInstances.upload())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnComplete(this::setSyncingFinished)
+                    .subscribe();
+        });
 
-            // TODO Set syncing
-            // TODO Show a snackbar to notify about the action
+        // TODO Set syncing
+        // TODO Show a snackbar to notify about the action
 
-            // TODO trigger data upload and subscribe (do not subscribe on the main thread!!!)
-            // TODO You have to use, at least: subscribeOn(), observeOn(), doOnComplete(), subscribe()
-            // TODO Call setSyncFinished on complete
+        // TODO trigger data upload and subscribe (do not subscribe on the main thread!!!)
+        // TODO You have to use, at least: subscribeOn(), observeOn(), doOnComplete(), subscribe()
+        // TODO Call setSyncFinished on complete
     }
 
     private void setSyncing() {
@@ -140,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void disableAllButtons() {
         setEnabledButton(syncMetadataButton, false);
         setEnabledButton(syncDataButton, false);
+        setEnabledButton(uploadDataButton, false);
         // TODO disable upload button
     }
 
@@ -150,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 setEnabledButton(syncDataButton, true);
                 if (SyncStatusHelper.isThereDataToUpload()) {
                     // TODO enable upload button
+                    setEnabledButton(uploadDataButton, true);
                 }
             }
         }
@@ -244,11 +260,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.navPrograms) {
-            ActivityStarter.startActivity(this, ProgramsActivity.class,false);
+            ActivityStarter.startActivity(this, ProgramsActivity.class, false);
         } else if (id == R.id.navTrackedEntities) {
-            ActivityStarter.startActivity(this, TrackedEntityInstancesActivity.class,false);
+            ActivityStarter.startActivity(this, TrackedEntityInstancesActivity.class, false);
         } else if (id == R.id.navTrackedEntitiesSearch) {
-            ActivityStarter.startActivity(this, TrackedEntityInstanceSearchActivity.class,false);
+            ActivityStarter.startActivity(this, TrackedEntityInstanceSearchActivity.class, false);
         } else if (id == R.id.navWipeData) {
             syncStatusText.setText(R.string.wiping_data);
             wipeData();
