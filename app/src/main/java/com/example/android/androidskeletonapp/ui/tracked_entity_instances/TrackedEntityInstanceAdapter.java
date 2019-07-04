@@ -5,10 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.androidskeletonapp.R;
+import com.example.android.androidskeletonapp.data.Sdk;
 import com.example.android.androidskeletonapp.data.service.DateFormatHelper;
 import com.example.android.androidskeletonapp.ui.base.DiffByIdItemCallback;
 import com.example.android.androidskeletonapp.ui.base.ListItemWithSyncHolder;
+import com.example.android.androidskeletonapp.ui.tracker_import_conflicts.TrackerImportConflictsAdapter;
 
+import org.hisp.dhis.android.core.imports.TrackerImportConflict;
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityAttributeValue;
 import org.hisp.dhis.android.core.trackedentity.TrackedEntityInstance;
 
@@ -51,6 +54,14 @@ public class TrackedEntityInstanceAdapter extends PagedListAdapter<TrackedEntity
         setBackgroundColor(R.color.colorAccentDark, holder.icon);
         setState(trackedEntityInstance.state(), holder.syncIcon);
         // TODO bind tracker import conflicts
+
+        List<TrackerImportConflict> conflicts = Sdk.d2().importModule().trackerImportConflicts
+                .byTrackedEntityInstanceUid().eq(trackedEntityInstance.uid()).get();
+
+        TrackerImportConflictsAdapter adapter = new TrackerImportConflictsAdapter();
+        holder.recyclerView.setAdapter(adapter);
+        adapter.setConflicts(conflicts);
+
     }
 
     private String valueAt(List<TrackedEntityAttributeValue> values, String attributeUid) {
