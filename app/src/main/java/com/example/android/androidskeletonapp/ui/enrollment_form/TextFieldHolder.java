@@ -10,6 +10,8 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 class TextFieldHolder extends FieldHolder {
 
     private final TextInputEditText editText;
@@ -41,11 +43,21 @@ class TextFieldHolder extends FieldHolder {
             case PHONE_NUMBER:
                 editText.setInputType(InputType.TYPE_CLASS_PHONE);
                 break;
-                default:
-                    editText.setInputType(InputType.TYPE_CLASS_TEXT);
-                    break;
+            default:
+                editText.setInputType(InputType.TYPE_CLASS_TEXT);
+                break;
         }
 
         // TODO set initial value, enable if editable and add value listener for text changes
+        editText.setText(fieldItem.getValue());
+
+        editText.setEnabled(fieldItem.isEditable());
+
+        editText.setOnFocusChangeListener((view, hasFocus) -> {
+            if (!hasFocus) {
+                if (!Objects.equals(fieldItem.getValue(), editText.getText().toString()))
+                    valueSavedListener.onValueSaved(fieldItem.getUid(), editText.getText().toString());
+            }
+        });
     }
 }
