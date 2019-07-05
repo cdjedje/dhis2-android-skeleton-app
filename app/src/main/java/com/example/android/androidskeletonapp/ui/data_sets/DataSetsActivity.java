@@ -81,7 +81,7 @@ public class DataSetsActivity extends ListActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.filter:
                         expansionLayout.toggle(true);
-                        Toast.makeText(getApplicationContext(),"Clicado",Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getApplicationContext(),"Clicado",Toast.LENGTH_SHORT).show();
                         break;
                 }
                 return false;

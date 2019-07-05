@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Dhis2 Skeleton App</string>
+    <string name="app_name">Master Facility List</string>
     <!-- Strings related to login -->
     <string name="title_activity_login">Log in</string>
     <string name="prompt_server_url">Server url</string>
@@ -37,7 +37,8 @@
     <string name="log_out">Log out</string>
     <string name="wipe_data">Wipe data</string>
     <!-- Strings related to programs -->
-    <string name="title_activity_programs">Your programs</string>
+    <!--<string name="title_activity_programs">Your programs</string>-->
+    <string name="title_activity_programs">Org Unit Details</string>
     <string name="program_name">Program Name</string>
     <string name="program_icon">Program Icon</string>
     <string name="program_stages">2 Program stages</string>
@@ -78,4 +79,5 @@
     <string name="date_button_text">Click to select date</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
