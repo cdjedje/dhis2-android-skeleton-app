@@ -1,5 +1,6 @@
 package com.example.android.androidskeletonapp.ui.main;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,8 +74,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         updateSyncDataAndButtons();
     }
 
-    private User getUser() {
-        return Sdk.d2().userModule().user.getWithoutChildren();
+    private User getUser()
+    {
+        Cursor userCursor = Sdk.d2().databaseAdapter()
+                .query("select * from User");
+        userCursor.moveToFirst();
+        User user = User.create(userCursor);
+        userCursor.close();
+        return user;
+//        return Sdk.d2().userModule().user.getWithoutChildren();
     }
 
     @Override
