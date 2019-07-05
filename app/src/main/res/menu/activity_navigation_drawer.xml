@@ -6,7 +6,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/navSync"
-            android:icon="@drawable/ic_foreign_key_black_24dp"
+            android:icon="@drawable/ic_sync"
             android:title="Sync Metadata" />
     </group>
 
