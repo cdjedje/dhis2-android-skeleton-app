@@ -5,6 +5,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.androidskeletonapp.R;
 import com.example.android.androidskeletonapp.data.Sdk;
@@ -21,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
 import org.hisp.dhis.android.core.user.User;
 
 import java.text.MessageFormat;
@@ -30,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -62,14 +65,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView greeting = findViewById(R.id.greeting);
         greeting.setText(String.format("Hi %s!", user.displayName()));
 
-        inflateMainView();
         createNavigationView(user);
+    }
+
+    public void orgUnitList(View view) {
+//        int orgUnitNumber = Sdk.d2().organisationUnitModule().organisationUnits
+//                .byLevel().eq(4)
+//                .count();
+//        Toast.makeText(getApplicationContext(), "# Org Unit " + orgUnitNumber, Toast.LENGTH_LONG).show();
+        ActivityStarter.startActivity(this, DataSetsActivity.class, false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        updateSyncDataAndButtons();
     }
 
     private User getUser() {
@@ -94,98 +103,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void inflateMainView() {
-        syncMetadataButton = findViewById(R.id.syncMetadataButton);
-        syncDataButton = findViewById(R.id.syncDataButton);
-        uploadDataButton = findViewById(R.id.uploadDataButton);
-
-        syncStatusText = findViewById(R.id.notificator);
-        progressBar = findViewById(R.id.syncProgressBar);
-
-        syncMetadataButton.setOnClickListener(view -> {
-            setSyncing();
-            Snackbar.make(view, "Syncing metadata", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-            syncStatusText.setText(R.string.syncing_metadata);
-            syncMetadata();
-        });
-
-        syncDataButton.setOnClickListener(view -> {
-            setSyncing();
-            Snackbar.make(view, "Syncing data", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-            syncStatusText.setText(R.string.syncing_data);
-            downloadData();
-        });
-
-        uploadDataButton.setOnClickListener(view -> {
-            setSyncing();
-            Snackbar.make(view, "Uploading data", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-            syncStatusText.setText(R.string.uploading_data);
-            uploadData();
-        });
-    }
 
     private void setSyncing() {
         isSyncing = true;
         progressBar.setVisibility(View.VISIBLE);
         syncStatusText.setVisibility(View.VISIBLE);
-        updateSyncDataAndButtons();
+
     }
 
     private void setSyncingFinished() {
-        isSyncing = false;
-        progressBar.setVisibility(View.GONE);
-        syncStatusText.setVisibility(View.GONE);
-        updateSyncDataAndButtons();
+//        isSyncing = false;
+//        progressBar.setVisibility(View.GONE);
+//        syncStatusText.setVisibility(View.GONE);
     }
 
-    private void disableAllButtons() {
-        setEnabledButton(syncMetadataButton, false);
-        setEnabledButton(syncDataButton, false);
-        setEnabledButton(uploadDataButton, false);
-    }
-
-    private void enablePossibleButtons(boolean metadataSynced) {
-        if (!isSyncing) {
-            setEnabledButton(syncMetadataButton, true);
-            if (metadataSynced) {
-                setEnabledButton(syncDataButton, true);
-                if (SyncStatusHelper.isThereDataToUpload()) {
-                    setEnabledButton(uploadDataButton, true);
-                }
-            }
-        }
-    }
-
-    private void setEnabledButton(FloatingActionButton floatingActionButton, boolean enabled) {
-        floatingActionButton.setEnabled(enabled);
-        floatingActionButton.setAlpha(enabled ? 1.0f : 0.3f);
-    }
-
-    private void updateSyncDataAndButtons() {
-        disableAllButtons();
-
-        int programCount = SyncStatusHelper.programCount();
-        int dataSetCount = SyncStatusHelper.dataSetCount();
-        int trackedEntityInstanceCount = SyncStatusHelper.trackedEntityInstanceCount();
-        int singleEventCount = SyncStatusHelper.singleEventCount();
-        int dataValueCount = SyncStatusHelper.dataValueCount();
-
-        enablePossibleButtons(programCount + dataSetCount > 0);
-
-        TextView downloadedProgramsText = findViewById(R.id.programsDownloadedText);
-        TextView downloadedDataSetsText = findViewById(R.id.dataSetsDownloadedText);
-        TextView downloadedTeisText = findViewById(R.id.trackedEntityInstancesDownloadedText);
-        TextView singleEventsDownloadedText = findViewById(R.id.singleEventsDownloadedText);
-        TextView downloadedDataValuesText = findViewById(R.id.dataValuesDownloadedText);
-        downloadedProgramsText.setText(MessageFormat.format("{0} Programs", programCount));
-        downloadedDataSetsText.setText(MessageFormat.format("{0} Data sets", dataSetCount));
-        downloadedTeisText.setText(MessageFormat.format("{0} Tracked entity instances", trackedEntityInstanceCount));
-        singleEventsDownloadedText.setText(MessageFormat.format("{0} Events without registration", singleEventCount));
-        downloadedDataValuesText.setText(MessageFormat.format("{0} Data values", dataValueCount));
-    }
 
     private void createNavigationView(User user) {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -212,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .doOnError(Throwable::printStackTrace)
                 .doOnComplete(() -> {
                     setSyncingFinished();
-                    ActivityStarter.startActivity(this, ProgramsActivity.class, false);
+                    Toast.makeText(getApplicationContext(), "Data Synced", Toast.LENGTH_LONG).show();
                 })
                 .subscribe());
     }
@@ -261,25 +192,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.navPrograms) {
-            ActivityStarter.startActivity(this, ProgramsActivity.class,false);
-        } else if (id == R.id.navTrackedEntities) {
-            ActivityStarter.startActivity(this, TrackedEntityInstancesActivity.class,false);
-        } else if (id == R.id.navTrackedEntitiesSearch) {
-            ActivityStarter.startActivity(this, TrackedEntityInstanceSearchActivity.class,false);
-        } else if (id == R.id.navDataSets) {
-            ActivityStarter.startActivity(this, DataSetsActivity.class,false);
-        } else if (id == R.id.navDataSetReports) {
-            ActivityStarter.startActivity(this, DataSetReportsActivity.class,false);
-        } else if (id == R.id.navD2Errors) {
-            ActivityStarter.startActivity(this, D2ErrorActivity.class,false);
-        } else if (id == R.id.navFKViolations) {
-            ActivityStarter.startActivity(this, ForeignKeyViolationsActivity.class,false);
-        } else if (id == R.id.navWipeData) {
-            syncStatusText.setText(R.string.wiping_data);
-            wipeData();
-        } else if (id == R.id.navExit) {
+        if (id == R.id.navExit) {
             compositeDisposable.add(logOut(this));
+        } else if (id == R.id.navSync) {
+            Toast.makeText(getApplicationContext(), "Sync", Toast.LENGTH_LONG).show();
+            syncMetadata();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawerLayout);

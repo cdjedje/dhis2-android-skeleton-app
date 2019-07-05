@@ -10,11 +10,12 @@ import com.example.android.androidskeletonapp.ui.base.DiffByIdItemCallback;
 import com.example.android.androidskeletonapp.ui.base.ListItemWithStyleHolder;
 
 import org.hisp.dhis.android.core.dataset.DataSet;
+import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
 
 import androidx.annotation.NonNull;
 import androidx.paging.PagedListAdapter;
 
-public class DataSetsAdapter extends PagedListAdapter<DataSet, ListItemWithStyleHolder> {
+public class DataSetsAdapter extends PagedListAdapter<OrganisationUnit, ListItemWithStyleHolder> {
 
     DataSetsAdapter() {
         super(new DiffByIdItemCallback<>());
@@ -30,9 +31,8 @@ public class DataSetsAdapter extends PagedListAdapter<DataSet, ListItemWithStyle
 
     @Override
     public void onBindViewHolder(@NonNull ListItemWithStyleHolder holder, int position) {
-        DataSet dataSet = getItem(position);
-        holder.title.setText(dataSet.displayName());
-        holder.subtitle1.setText(dataSet.periodType().name());
-        StyleBinderHelper.bindStyle(holder, dataSet.style());
+        OrganisationUnit organisationUnit = getItem(position);
+        holder.title.setText(organisationUnit.displayName());
+        holder.subtitle1.setText(organisationUnit.code());
     }
 }

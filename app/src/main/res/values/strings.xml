@@ -12,8 +12,10 @@
     <string name="login_failed">"Login failed"</string>
     <!-- Strings related to autoFill -->
     <string name="auto_fill_url">"http://android2.dhis2.org:8080"</string>
-    <string name="auto_fill_username">"android_"</string>
-    <string name="auto_fill_password">"Android2019xx.."</string>
+    <!--<string name="auto_fill_username">"android_"</string>-->
+    <!--<string name="auto_fill_password">"Android2019xx.."</string>-->
+    <string name="auto_fill_username">"admin"</string>
+    <string name="auto_fill_password">"district"</string>
     <!-- Strings related to list item -->
     <string name="sync_icon">Sync icon</string>
     <string name="item_icon">Icon</string>
@@ -63,8 +65,10 @@
     <string name="title_activity_fk_violations">Foreign key violations</string>
     <string name="no_fk_violations_found">No foreign key violations found</string>
     <!-- Strings related to data sets -->
-    <string name="title_activity_data_sets">Your data sets</string>
-    <string name="no_data_sets_found">No data sets found</string>
+    <!--<string name="title_activity_data_sets">Your data sets</string>-->
+    <string name="title_activity_data_sets">Your Health Facilities</string>
+    <!--<string name="no_data_sets_found">No data sets found</string>-->
+    <string name="no_data_sets_found">No org units found</string>
     <!-- Strings related to data set reports -->
     <string name="title_activity_data_set_reports">Your data set reports</string>
     <string name="no_data_set_reports_found">No data set reports found</string>

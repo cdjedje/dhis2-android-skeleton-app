@@ -5,13 +5,19 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.androidskeletonapp.R;
+
 public abstract class ListActivity extends AppCompatActivity {
 
     protected RecyclerView recyclerView;
+    protected Toolbar toolbar;
 
     protected void setUp(int contentViewId, int toolbarId, int recyclerViewId) {
         setContentView(contentViewId);
-        Toolbar toolbar = findViewById(toolbarId);
+        toolbar = findViewById(toolbarId);
+
+        toolbar.inflateMenu(R.menu.toolbar_list_menu);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
